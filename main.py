@@ -39,7 +39,7 @@ def Database_Connection_check():
 
 #Enpoint For Health check
 
-application.get("/healthz",status_code=status.HTTP_200_OK)
+@application.get("/healthz",status_code=status.HTTP_200_OK)
 #Defining the route for get function to 'healthz'endpoint
 #Status code HTTP 200 ok indicates the successful connection with the endpoint.
 def Health_check():
@@ -53,3 +53,7 @@ def Health_check():
     # To ensure API return will provide the up-to-date information and not the cache information
     return {}, headers
 
+#Defining the root endpoint for landing page
+@application.get('/')
+def read_root():
+    return{"message":"welcome to the fast api application"}
