@@ -53,11 +53,3 @@ def Health_check():
     # To ensure API return will provide the up-to-date information and not the cache information
     return {}, headers
 
-
-
-
-
-
-
-
-
