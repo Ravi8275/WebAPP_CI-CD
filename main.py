@@ -19,7 +19,7 @@ load_dotenv()
 postgres_password=os.getenv("POSTGRES_PASSWORD")
 #Variable initialisation for the desired input.
 
-LocalDatabase_URL="postgresql://postgres:postgres_password@localhost/TestingDatabase"
+LocalDatabase_URL="postgresql://postgres:Ravi@123@localhost:5432/TestingDatabase"
 #Providing the Postgresql Database url for the connection
 
 #Connectivity Check Function
@@ -30,10 +30,10 @@ def Database_Connection_check():
         #Creating the SQLalchemy engine to further create the connection by passing Mentioned url as a parameter to create_engine function
 
         with Connection_creation.connect():
-            return True
+            return status.HTTP_200_OK
         #Establishing the Connection with connect method using the Sqlalchemy engine which was created earlier.
     except OperationalError:
-        return False
+        return status.HTTP_503_SERVICE_UNAVAILABLE
 
 #if the connection with the desired database is made successully then True would be returned and False incase of failure.
 
@@ -45,7 +45,7 @@ def Database_Connection_check():
 def Health_check():
     # Handler function whenever the 'healthz' endpoint is called
     if not Database_Connection_check():  # Checking for the status of connection establishment acquired from the previous function
-        raise HTTPException(status_code=status.HTTP_503_STATUS_UNAVAILABLE)
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
         # HTTP 503 status unavailable will be returned in case of failed connection
     headers = {
         "Cache-Control": "no-cache"
