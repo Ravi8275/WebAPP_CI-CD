@@ -10,29 +10,24 @@ from fastapi.responses import JSONResponse
 import subprocess
 import uuid
 
-# Define the full path to the Homebrew executable
-
-application = FastAPI()
+application=FastAPI()
  
 load_dotenv()
 
-postgres_password = os.getenv("POSTGRES_PASSWORD")
+postgres_password=os.getenv("POSTGRES_PASSWORD")
 
-LocalDatabase_URL = "postgresql://webappcicd:webappcicd@localhost:5432/clientdatabase"
+LocalDatabase_URL="postgresql://webappcicd:webappcicd@localhost:5432/clientdatabase"
 
-homebrew_executable = "/opt/homebrew/bin/brew"
+homebrew_executable="/opt/homebrew/bin/brew"
 
-# Define a function to start PostgreSQL using Homebrew
 def start_postgresql():
     try:
-        subprocess.run([homebrew_executable, "services", "start", "postgresql"], check=True)
+        subprocess.run([homebrew_executable,"services","start","postgresql"],check=True)
         print("PostgreSQL service started successfully.")
     except subprocess.CalledProcessError as e: 
-        print(f"Error starting PostgreSQL service: {e}")   
-
-# Call the function to start PostgreSQL
+        print(f"Error starting PostgreSQL service:{e}")   
 start_postgresql()
-Base_model = declarative_base()
+Base_model=declarative_base()
 
 class Clients(Base_model):
     __tablename__ = "clients" 
@@ -122,21 +117,21 @@ async def Delete_Client(Admin_Email_id: str, Admin_password: str,User_email_id:s
     db.commit()
     return
 
-@application.put("/Client/update", status_code=status.HTTP_200_OK)
+@application.put("/Client/update",status_code=status.HTTP_200_OK)
 async def Update_Client_Details(
-    Email_id: str, 
-    Old_password: str, 
-    New_password: str, 
-    New_first_name: str, 
-    New_second_name: str,
-    db: Session = Depends(start_db)
+    Email_id:str, 
+    Old_password:str, 
+    New_password:str, 
+    New_first_name:str, 
+    New_second_name:str,
+    db: Session=Depends(start_db)
 ):
-    client = db.query(Clients).filter(Clients.email==Email_id,Clients.password==Old_password).first()
+    client=db.query(Clients).filter(Clients.email==Email_id,Clients.password==Old_password).first()
     if not client:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Client not found or invalid credentials")
-    client.password = New_password
-    client.first_name = New_first_name
-    client.second_name = New_second_name
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Client not found or invalid credentials")
+    client.password=New_password
+    client.first_name=New_first_name
+    client.second_name=New_second_name
     db.commit()
     return {"message": "Client details updated successfully"}
 
