@@ -1,0 +1,28 @@
+name: Code Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 10  # Adjust the timeout as needed
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Print current directory
+      run: pwd  # Print current working directory
+
+    - name: Install dependencies
+      run: npm install  # or any other command to install dependencies
+
+    - name: Run linter
+      run: npm run lint  # or any other command to run your linter
+
+    - name: Run tests
+      run: npm test  # or any other command to run your tests
