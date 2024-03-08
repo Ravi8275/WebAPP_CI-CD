@@ -139,3 +139,4 @@ async def Update_Client_Details(
     client.second_name = New_second_name
     db.commit()
     return {"message": "Client details updated successfully"}
+
