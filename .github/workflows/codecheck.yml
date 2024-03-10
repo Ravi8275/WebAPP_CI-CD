@@ -13,6 +13,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pytest:
+    name: Pytest
+    runs-on: ubuntu-latest
+    
   build:
     runs-on: ubuntu-latest
 
