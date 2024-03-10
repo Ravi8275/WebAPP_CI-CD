@@ -1,5 +1,6 @@
 annotated-types==0.6.0
 anyio==4.3.0
+bcrypt==4.1.2
 DateTime==5.4
 fastapi==0.110.0
 idna==3.6
