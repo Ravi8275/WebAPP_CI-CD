@@ -11,7 +11,7 @@ import subprocess
 import uuid
 import logging
 from pydantic import BaseModel
-#import bcrypt
+import bcrypt
 
 application=FastAPI()
  
@@ -36,7 +36,6 @@ class Clients(Base_model):
     __tablename__ = "clients" 
 
     id = Column(String, primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
-    #id = Column(Integer, primary_key=True, index=True,autoincrement=True)
     email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
     first_name = Column(String, nullable=False)
@@ -81,68 +80,108 @@ async def Health_check(request: Request):
     headers = {
         "Cache-Control": "no-cache"
     }
-    return {}, headers
+    return None
+
+@application.put("/healthz", status_code=status.HTTP_200_OK)
+async def Health_check(request: Request):
+    if request.query_params or await request.body():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no payload allowed")
+    if Database_Connection_check() == status.HTTP_503_SERVICE_UNAVAILABLE:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+    headers = {
+        "Cache-Control": "no-cache"
+    }
+    return None
+
+@application.post("/healthz", status_code=status.HTTP_200_OK)
+async def Health_check(request: Request):
+    if request.query_params or await request.body():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no payload allowed")
+    if Database_Connection_check() == status.HTTP_503_SERVICE_UNAVAILABLE:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+    headers = {
+        "Cache-Control": "no-cache"
+    }
+    return None
+
+@application.delete("/healthz", status_code=status.HTTP_200_OK)
+async def Health_check(request: Request):
+    if request.query_params or await request.body():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no payload allowed")
+    if Database_Connection_check() == status.HTTP_503_SERVICE_UNAVAILABLE:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+    headers = {
+        "Cache-Control": "no-cache"
+    }
+    return None
+
+  # password hashing functions
+def get_password_hash(password):
+    pwd_bytes = password.encode('utf-8') #utf-8 is similat to byte repsentation of text i.e b"password"
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password=pwd_bytes, salt=salt)
+    string_password = hashed_password.decode('utf8')
+    return string_password  
+
+def verify_password(plain_password, hashed_password):
+    password_byte_enc = plain_password.encode('utf-8') #Similarly mentining the byte representation using utf-8 encoding
+    hashed_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(password_byte_enc, hashed_password)
 
 
+class ClientRegistrationRequest(BaseModel):
+    First_Name: str
+    Second_Name: str
+    Email_id: str
+    password: str
+ 
 @application.post("/Register", status_code=status.HTTP_201_CREATED)
-async def Client_Registration(First_Name: str, Second_Name: str, Email_id: str, password: str):
-    logging.info(f"Registering client: {Email_id}")
-    DB=Localsession()
-    Existing_client=DB.query(Clients).filter(Clients.email == Email_id).first()
+async def Client_Registration(Client_data:ClientRegistrationRequest,db:Session=Depends(start_db)):
+    First_Name=Client_data.First_Name
+    Second_Name=Client_data.Second_Name
+    Email_id=Client_data.Email_id
+    password=Client_data.password
+    if not all([First_Name,Second_Name,Email_id,password]):
+       raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incomplete user registration data")
+    Existing_client=db.query(Clients).filter(Clients.email == Email_id).first()
     if Existing_client:
         logging.error("Client already exists")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Client already exists")
-    #hashed_password=bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password=get_password_hash(password)
     client_id=str(uuid.uuid4())
-    New_client=Clients(id=client_id,email=Email_id, password=password, first_name=First_Name, second_name=Second_Name)
-    DB.add(New_client)
-    DB.commit()
-    logging.info("Client registered successfully")
+    New_client=Clients(id=client_id,email=Email_id, password=hashed_password, first_name=First_Name, second_name=Second_Name)
+    db.add(New_client)
+    db.commit()
     Client_Details={
         'Email':Email_id,
         'Name':First_Name+' '+Second_Name
     }
     return {"Info" : "User registered Successfully","Client_Details": Client_Details}
 
-@application.get("/Client login")
-#class LoginCredentials(BaseModel):
- #   Email_id: str
- #   password: str
-async def Client_login(Email_id: str, password: str, db: Session = Depends(start_db)):
-    logging.info(f"Login attempt for client: {Email_id}")
-    Check_details = db.query(Clients).filter(Clients.email == Email_id,Clients.password==password).first()    
-    if Check_details:
-        #authorized=bcrypt.checkpw(password.encode('utf-8'), Check_details.password.encode('utf-8'))
-        Current_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        Client_Loggedin_details={
-        'Email':Email_id,
-        'Name':Check_details.first_name+' '+Check_details.second_name,
-        'Unique ID':Check_details.id,
-        'Logged in time':Current_time
-        }
-        return {"Message": "Logged in Successfully",'Client_details':Client_Loggedin_details}
-    else:
-        logging.error(f"Invalid credentials for client: {Email_id}")
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Email id or password")
+
+class ClientUpdateRequest(BaseModel):
+    Email_id:str
+    password:str
+    New_password:str
+    First_Name: str
+    Second_Name: str
 
 @application.put("/Client/update",status_code=status.HTTP_200_OK)
-async def Update_Client_Details(
-    Email_id:str, 
-    Old_password:str, 
-    New_password:str, 
-    New_first_name:str, 
-    New_second_name:str,
-    db: Session=Depends(start_db)
-):
-    logging.info(f"Updating details for client: {Email_id}")
-    client=db.query(Clients).filter(Clients.email==Email_id,Clients.password==Old_password).first()
-    if not client:
-        logging.error(f"Client not found or invalid credentials: {Email_id}")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Client not found or invalid credentials")
-    client.password=New_password
+async def Update_Client_Details(Client_data:ClientUpdateRequest,db:Session=Depends(start_db)):
+    Email_id=Client_data.Email_id
+    Old_password=Client_data.password
+    New_password=Client_data.New_password
+    New_first_name=Client_data.First_Name 
+    New_second_name=Client_data.Second_Name
+    if not all([Email_id,Old_password,New_password,New_first_name,New_second_name]):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incomplete client update data")
+    client=db.query(Clients).filter(Clients.email==Email_id).first()
+    if not client or not verify_password(Old_password, client.password):
+       raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Client not found or invalid credentials")
+    hashed_new_password=get_password_hash(New_password)
+    client.password=hashed_new_password
     client.first_name=New_first_name
     client.second_name=New_second_name
     db.commit()
-    logging.info(f"Details updated successfully for client: {Email_id}")
     return {"message": "Client details updated successfully"}
 
