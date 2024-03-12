@@ -14,3 +14,4 @@ SQLAlchemy==2.0.28
 starlette==0.36.3
 typing_extensions==4.10.0
 zope.interface==6.2
+httpx==0.20.0
