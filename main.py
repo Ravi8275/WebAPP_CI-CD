@@ -21,7 +21,8 @@ postgres_password=os.getenv("POSTGRES_PASSWORD")
 
 LocalDatabase_URL="postgresql://webappcicd:webappcicd@localhost:5432/clientdatabase"
 
-homebrew_executable="/opt/homebrew/bin/brew"
+# Hardcoded this line - Add to your environment variables
+# homebrew_executable="/opt/homebrew/bin/brew"
 
 def start_postgresql():
     try:
