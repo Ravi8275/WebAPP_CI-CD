@@ -1,10 +1,11 @@
+from unittest.mock import patch
 from fastapi.testclient import TestClient
 from main import application
-from main import status
-import pytest
 
 client = TestClient(application)
 
-def test_health_check():
+@patch('main.start_postgresql')
+def test_health_check(mock_start_postgresql):
+    mock_start_postgresql.return_value = None
     response = client.get('/healthz')
-    assert response.status_code == status.HTTP_200_OK
+    assert response.status_code == 200
