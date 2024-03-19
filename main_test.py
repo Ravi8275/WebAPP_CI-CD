@@ -4,8 +4,9 @@ from main import application
 
 client = TestClient(application)
 
-@patch('database.start_postgresql')
-def test_health_check(mock_start_postgresql):
-    mock_start_postgresql.return_value = None
+@patch('subprocess.run')
+def test_health_check(mock_subprocess_run):
+    mock_subprocess_run.return_value = None
+    import database
     response = client.get('/healthz')
     assert response.status_code == 200
