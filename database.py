@@ -8,29 +8,16 @@ import subprocess
 from datetime import datetime
 from fastapi import FastAPI, HTTPException,status, Request,Depends
 
-homebrew_executable="/opt/homebrew/bin/brew"
-
 load_dotenv()
 
-postgres_password=os.getenv("POSTGRES_PASSWORD")
+#postgres_password=os.getenv("POSTGRES_PASSWORD")
+LocalDatabase_URL=os.getenv("DATABASE_URL")
 
-LocalDatabase_URL="postgresql://webappcicd:webappcicd@localhost:5432/clientdatabase"
+Engine = create_engine(LocalDatabase_URL)
 
+Base_model = declarative_base()
 
-def start_postgresql():
-    try:
-        subprocess.run([homebrew_executable,"services","start","postgresql"],check=True)
-        print("PostgreSQL service started successfully.")
-    except subprocess.CalledProcessError as e: 
-        print(f"Error starting PostgreSQL service:{e}") 
-
-start_postgresql()
-
-Base_model=declarative_base()
-
-Base_model.metadata.create_all(bind=create_engine(LocalDatabase_URL))
-
-Localsession = sessionmaker(autocommit=False, autoflush=False, bind=create_engine(LocalDatabase_URL))
+Localsession = sessionmaker(autocommit=False, autoflush=False, bind=Engine)
 
 def start_db():
     DB = Localsession()
