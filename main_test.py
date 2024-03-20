@@ -1,12 +1,9 @@
-from unittest.mock import patch
+from fastapi import status
 from fastapi.testclient import TestClient
 from main import application
 
 client = TestClient(application)
 
-@patch('subprocess.run')
-def test_health_check(mock_subprocess_run):
-    mock_subprocess_run.return_value = None
-    import main
+def test_client():
     response = client.get('/healthz')
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK
