@@ -20,5 +20,5 @@ def test_update_account():
 
 def test_get_account():
     response.get('http://localhost:8000/v1/user/1')
-    assert.status_code==200
+    assert response.status_code==200
     assert response.json()['Email_id']=='Johnwick@gmail.com'
