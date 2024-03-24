@@ -10,7 +10,6 @@ from fastapi import FastAPI, HTTPException,status, Request,Depends
 
 load_dotenv()
 
-#postgres_password=os.getenv("POSTGRES_PASSWORD")
 LocalDatabase_URL=os.getenv("DATABASE_URL")
 
 Engine = create_engine(LocalDatabase_URL)
