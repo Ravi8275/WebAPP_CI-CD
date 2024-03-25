@@ -18,8 +18,3 @@ def test_create_account():
 def test_update_account():
     response=requests.put('http://localhost:8000/v1/user/1',json={'First_Name':'john','Second_Name':'Wick','Email_id':'Johnwick@gmail.com','password':'secret','New_password':'no secret'})
     assert response.status_code== status.HTTP_200_OK
-
-#def test_get_account():
-#    response.get('http://localhost:8000/v1/user/1')
-#    assert response.status_code==
-#    assert response.json()['Email_id']=='johnwick@gmail.com'
