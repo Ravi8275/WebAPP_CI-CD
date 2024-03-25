@@ -16,5 +16,5 @@ def test_create_account():
     assert response.status_code== status.HTTP_201_CREATED
 
 def test_update_account():
-    response=requests.put('http://127.0.0.1:8000/v1/user/1',json={'First_Name':'john','Second_Name':'Wick','Email_id':'Johnwick@gmail.com','password':'secret','New_password':'no secret'})
+    response=requests.put('http://127.0.0.1:8000/v1/user',json={'First_Name':'john','Second_Name':'Wick','Email_id':'Johnwick@gmail.com','password':'secret','New_password':'no secret'})
     assert response.status_code== status.HTTP_200_OK
