@@ -21,7 +21,7 @@ async def Health_check(request: Request):
     }
     return None
 
-@application.put("//v1/healthz", status_code=status.HTTP_200_OK)
+'''@application.put("/v1/healthz", status_code=status.HTTP_200_OK)
 async def Health_check(request: Request):
     if request.query_params or await request.body():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no payload allowed")
@@ -30,9 +30,9 @@ async def Health_check(request: Request):
     headers = {
         "Cache-Control": "no-cache"
     }
-    return None
+    return None'''
 
-@application.post("/v1/healthz", status_code=status.HTTP_200_OK)
+'''@application.post("/v1/healthz", status_code=status.HTTP_200_OK)
 async def Health_check(request: Request):
     if request.query_params or await request.body():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no payload allowed")
@@ -41,9 +41,9 @@ async def Health_check(request: Request):
     headers = {
         "Cache-Control": "no-cache"
     }
-    return None
+    return None'''
 
-@application.delete("/v1/healthz", status_code=status.HTTP_200_OK)
+'''@application.delete("/v1/healthz", status_code=status.HTTP_200_OK)
 async def Health_check(request: Request):
     if request.query_params or await request.body():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no payload allowed")
@@ -52,7 +52,7 @@ async def Health_check(request: Request):
     headers = {
         "Cache-Control": "no-cache"
     }
-    return None
+    return None'''
 
   # password hashing functions
 def get_password_hash(password):
