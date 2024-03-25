@@ -10,7 +10,7 @@ from sqlalchemy.orm import  Session
 
 application=FastAPI()
 
-@application.get("/healthz", status_code=status.HTTP_200_OK)
+@application.get("/v1/healthz", status_code=status.HTTP_200_OK)
 async def Health_check(request: Request):
     if request.query_params or await request.body():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no payload allowed")
@@ -21,7 +21,7 @@ async def Health_check(request: Request):
     }
     return None
 
-@application.put("/healthz", status_code=status.HTTP_200_OK)
+@application.put("//v1/healthz", status_code=status.HTTP_200_OK)
 async def Health_check(request: Request):
     if request.query_params or await request.body():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no payload allowed")
@@ -32,7 +32,7 @@ async def Health_check(request: Request):
     }
     return None
 
-@application.post("/healthz", status_code=status.HTTP_200_OK)
+@application.post("/v1/healthz", status_code=status.HTTP_200_OK)
 async def Health_check(request: Request):
     if request.query_params or await request.body():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no payload allowed")
@@ -43,7 +43,7 @@ async def Health_check(request: Request):
     }
     return None
 
-@application.delete("/healthz", status_code=status.HTTP_200_OK)
+@application.delete("/v1/healthz", status_code=status.HTTP_200_OK)
 async def Health_check(request: Request):
     if request.query_params or await request.body():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="no payload allowed")
@@ -74,7 +74,7 @@ class ClientRegistrationRequest(BaseModel):
     Email_id: str
     password: str
  
-@application.post("/Register", status_code=status.HTTP_201_CREATED)
+@application.post("/v1/user", status_code=status.HTTP_201_CREATED)
 async def Client_Registration(Client_data:ClientRegistrationRequest,db:Session=Depends(start_db)):
     First_Name=Client_data.First_Name
     Second_Name=Client_data.Second_Name
@@ -105,7 +105,7 @@ class ClientUpdateRequest(BaseModel):
     First_Name: str
     Second_Name: str
 
-@application.put("/Client/update",status_code=status.HTTP_200_OK)
+@application.put("/v1/user/{Email_id}",status_code=status.HTTP_200_OK)
 async def Update_Client_Details(Client_data:ClientUpdateRequest,db:Session=Depends(start_db)):
     Email_id=Client_data.Email_id
     Old_password=Client_data.password
