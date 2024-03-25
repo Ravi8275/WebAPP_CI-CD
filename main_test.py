@@ -7,7 +7,7 @@ client = TestClient(application)
 
 
 def test_client():
-    response = client.get('/healthz')
+    response = client.get('/v1/healthz')
     assert response.status_code == status.HTTP_200_OK
 
 
