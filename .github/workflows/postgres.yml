@@ -1,17 +1,17 @@
-name : Integration test
+name: Integration test
 
 env:
   DOCKER_BUILDKIT: 1
   COMPOSE_DOCKER_CLI_BUILD: 1
-  
+
 on:
   pull_request:
     branches:
-       - main
+      - main
   push:
     branches:
       - main
-       
+
 concurrency:
   group: ${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
@@ -25,33 +25,40 @@ jobs:
       postgres:
         image: postgres:15
         ports:
-          -5432 : 5432
+          - 5432:5432
         env:
-          POSTGRES_PASSWORD = postgres
+          POSTGRES_PASSWORD: postgres
 
-     env:
-      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
+      fastapi:
+        image: python:3.9-slim
+        ports:
+          - 8000:8000
+        working_dir: /app
+        command: uvicorn main:application --host 0.0.0.0 --port 8000
+        volumes:
+          - .:/app
+        depends_on:
+          - postgres
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/postgres"
 
-     steps:
+    steps:
+      - name: Checkout Code repository
+        uses: actions/checkout@v3
 
-       - name : Checkout Code repository
-         uses : actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
 
-       - name : Set up Python
-         uses : actions/setup-python@v3
-         with :
-           python-version:"3.11"
-           cache : pip
-           cache-dependency-path: |
-             requirements.txt
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-       - name : Install Dependencies
-         run : |
-           python -m pip install --upgrade pip
-           pip install -r requirements.txt
-
-       - name : Run Integration Tests
-         run : |
-           pytest integration_tests/test_user_endpoint.py
-
-      
+      - name: Run Integration Tests
+        run: |
+          pytest integration_tests/test_user_endpoint.py
