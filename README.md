@@ -22,16 +22,18 @@ The project demonstrates the integration of FastAPI webframework for building AP
 
 ### To get start with the project,start with cloning the repository
 
+```
 git clone https://github.com/your_username/your_repository.git
+```
 
 ### Navigate to Project Directory
 
 cd your_repository
 
 ### Install Dependencies
-
+```
 pip install -r requirements.txt
-
+```
 Setup PostgreSQL
 
 Setup Environment variables
@@ -43,9 +45,9 @@ Add the following environment variable with PostgreSQL password:
 POSTGRES_PASSWORD=<postgresql_password>
 
 ### Run the Application 
-
+```
 uvicorn main:application --reload
-
+```
 ## Accessing the API
 Once the application is running, one can access the API endpoints using a web browser or tools like Postman. 
 The base URL for the API will typically be http://localhost:8000.
