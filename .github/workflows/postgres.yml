@@ -29,17 +29,6 @@ jobs:
         env:
           POSTGRES_PASSWORD: postgres
 
-      fastapi:
-        image: python:3.9-slim
-        ports:
-          - 8000:8000
-        working_dir: /app
-        command: uvicorn main:application --host 0.0.0.0 --port 8000
-        volumes:
-          - .:/app
-        env:
-          DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/postgres"
-
     steps:
       - name: Checkout Code repository
         uses: actions/checkout@v3
@@ -51,6 +40,11 @@ jobs:
           cache: pip
           cache-dependency-path: |
             requirements.txt
+
+      - name: Build and run FastAPI container
+        run: |
+          docker build -t my-fastapi-image .
+          docker run -d --name my-fastapi-container -p 8000:8000 --env-file .env my-fastapi-image
 
       - name: Install Dependencies
         run: |
