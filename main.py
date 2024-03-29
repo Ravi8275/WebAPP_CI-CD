@@ -5,10 +5,12 @@ import logging
 from pydantic import BaseModel
 import bcrypt
 import uuid
-from database import start_db,Database_Connection_check,Base_model,Clients
+from database import start_db,Database_Connection_check,Base_model,Clients,create_table
 from sqlalchemy.orm import  Session
 
 application=FastAPI()
+
+create_table()
 
 @application.get("/v1/healthz", status_code=status.HTTP_200_OK)
 async def Health_check(request: Request):
