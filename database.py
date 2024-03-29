@@ -43,3 +43,6 @@ class Clients(Base_model):
     second_name = Column(String)
     account_created = Column(DateTime, default=datetime.utcnow, nullable=False)
     account_updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+def create_table():
+    Base_model.metadata.create_all(bind=Engine)
