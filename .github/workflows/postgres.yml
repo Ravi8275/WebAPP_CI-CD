@@ -40,6 +40,10 @@ jobs:
           cache: pip
           cache-dependency-path: |
             requirements.txt
+
+      - name: Set up environment variables
+        run: 
+          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres" >> $GITHUB_ENV
             
       - name: Run FastAPI application
         run: |
