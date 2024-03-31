@@ -50,6 +50,7 @@ uvicorn main:application --reload
 ```
 ## Accessing the API
 Once the application is running, one can access the API endpoints using a web browser or tools like Postman. 
+
 The base URL for the API will typically be http://localhost:8000.
 
 # API Endpoints:
