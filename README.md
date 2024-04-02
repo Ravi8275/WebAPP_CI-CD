@@ -35,14 +35,40 @@ cd your_repository
 pip install -r requirements.txt
 ```
 Setup PostgreSQL
+Create User with password using
+```
+CREATE USER webappcicd WITH PASSWORD 'webappcicd';
 
-Setup Environment variables
+```
 
-Create a .env file in the project directory.
+Create the database
 
-Add the following environment variable with PostgreSQL password:
+```
+CREATE DATABASE mydatabase;
+```
+Create Appropriate schema using
+```
+CREATE TABLE clients (
+    id VARCHAR PRIMARY KEY,
+    email VARCHAR UNIQUE NOT NULL,
+    password VARCHAR NOT NULL,
+    first_name VARCHAR NOT NULL,
+    second_name VARCHAR,
+    account_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    account_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+```
 
-POSTGRES_PASSWORD=<postgresql_password>
+ Create Virtual Environment using
+```
+touch .env
+```
+
+Store the Configuration variables like database url in the environment file
+```
+DATABASE_URL=postgresql://username:password@localhost:5432/databasename
+```
+Make sure to replace the username,password and databasename with the appropriate values.
 
 ### Run the Application 
 ```
