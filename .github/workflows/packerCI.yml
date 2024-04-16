@@ -85,5 +85,5 @@ packer_ci:
 
     - name: Check Packer file validity
       run: |
-        packer validate Packer
+        packer validate Packer/packerconfig.pkr.hcl
 
