@@ -86,4 +86,5 @@ jobs:
 
       - name: Check Packer file validity
         run: |
+          packer init Packer
           packer validate Packer/packerconfig.pkr.hcl
