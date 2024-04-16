@@ -58,28 +58,32 @@ jobs:
         run: |
           pytest main_test.py
 
-      packer ci:
-        name : Packer CI
-        runs on: ubuntu-latest
+  packer_ci:
+    runs-on: ubuntu-latest
+    env:
+      PKR_VAR_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      PKR_VAR_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      PKR_VAR_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      PKR_VAR_POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+      PKR_VAR_POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-        steps: 
-          - name : Checkout code
-            uses : actions/checkout@v2
+      - name: Install Packer
+        run: sudo apt-get update && sudo apt-get install -y packer
 
-         -  name: Install Packer
-            run : sudo apt-get update && sudo apt-get install -y packer
-
-         -  name: check Packer file format
-            run : | 
-            if ! packer fmt -check packer;then
-              echo "Packer format is not correct. Please run 'packer fmt' to fix the issue."
-            exit 1
-          fi
-         - name: Check Packer file validity
-            run: |
-            packer init packer
-            if ! packer validate packer; then
-              echo "Packer files are not valid."
+      - name: Check Packer file format
+        run: |
+          if ! packer fmt -check packer; then
+            echo "Packer format is not correct. Please run 'packer fmt' to fix the issue."
             exit 1
           fi
 
+      - name: Check Packer file validity
+        run: |
+          packer init packer
+          if ! packer validate packer; then
+            echo "Packer files are not valid."
+            exit 1
+          fi
