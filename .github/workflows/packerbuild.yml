@@ -57,7 +57,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y packer
 
       - name: Initialize packer
-        run: packer init packer
+        run: packer init Packer
 
       - name: Build Packer image
         run: packer build packer

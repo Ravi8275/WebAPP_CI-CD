@@ -1,4 +1,4 @@
-   variable "project_id" {
+variable "project_id" {
   default = "project-8275"
 }
 
@@ -32,10 +32,10 @@ packer {
 }
 
 source "googlecompute" "example" {
-  project_id         = var.project_id
+  project_id          = var.project_id
   source_image_family = var.source_image_family
-  ssh_username       = var.ssh_username
-  zone               = var.zone
+  ssh_username        = var.ssh_username
+  zone                = var.zone
 
   metadata = {
     ssh-keys = "centos:${var.public_ssh_key_path}"
