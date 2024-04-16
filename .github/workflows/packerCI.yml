@@ -75,15 +75,15 @@ jobs:
 
       - name: Check Packer file format
         run: |
-          if ! packer fmt -check packer; then
+          if ! packer fmt -check Packer; then
             echo "Packer format is not correct. Please run 'packer fmt' to fix the issue."
             exit 1
           fi
 
       - name: Check Packer file validity
         run: |
-          packer init packer
-          if ! packer validate packer; then
+          packer init Packer
+          if ! packer validate Packer; then
             echo "Packer files are not valid."
             exit 1
           fi
