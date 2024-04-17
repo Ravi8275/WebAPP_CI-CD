@@ -53,37 +53,38 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
+          
       - name: Run Integration Tests
         run: |
           pytest main_test.py
 
-packer_ci:
-  runs-on: ubuntu-latest
-  env:
-    PKR_VAR_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-    PKR_VAR_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-    PKR_VAR_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-    PKR_VAR_POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-    PKR_VAR_POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+  packer_ci:
+    name: Packer CI
+    runs-on: ubuntu-latest
+    env:
+      PKR_VAR_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      PKR_VAR_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      PKR_VAR_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      PKR_VAR_POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+      PKR_VAR_POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Install Packer
-      run: |
-        wget https://releases.hashicorp.com/packer/1.8.6/packer_1.8.6_linux_amd64.zip
-        unzip packer_1.8.6_linux_amd64.zip
-        sudo mv packer /usr/local/bin
+      - name: Install Packer
+        run: |
+          wget https://releases.hashicorp.com/packer/1.8.6/packer_1.8.6_linux_amd64.zip
+          unzip packer_1.8.6_linux_amd64.zip
+          sudo mv packer /usr/local/bin
 
-    - name: Check Packer file format
-      run: |
-        if ! packer fmt -check Packer; then
-          echo "Packer format is not correct. Please run 'packer fmt' to fix the issue."
-          exit 1
-        fi
+      - name: Check Packer file format
+        run: |
+          if ! packer fmt -check Packer; then
+            echo "Packer format is not correct. Please run 'packer fmt' to fix the issue."
+            exit 1
+          fi
 
-    - name: Check Packer file validity
-      run: |
-        packer validate Packer
-
+      - name: Check Packer file validity
+        run: |
+          packer init Packer
+          packer validate Packer/packerconfig.pkr.hcl
