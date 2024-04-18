@@ -3,28 +3,33 @@ set -eo pipefail
 #update all the installed packages
 sudo yum update -y
 
+
 #installing the required
-sudo yum install -y wget gnupg python3 gcc
+sudo yum install -y wget gnupg python3 gcc 
+#sudo mv /etc/yum.repos.d/pgdg-redhat-all.repo /etc/yum.repos.d/pgdg-redhat-all.repo.old
 #providing the repository to download postgres
-sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 #to download the gpg key which is used to signpostgres package
 curl -O https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG-14
+file RPM-GPG-KEY-PGDG-14
+sudo rpm --import RPM-GPG-KEY-PGDG-14
+
 sudo yum -y module disable postgresql
 
-#sudo yum clean all
-#sudo yum makecache
-# curl -LO https://cpan.metacpan.org/authors/id/T/TO/TODDR/IPC-Run-20210523.0.tar.gz
-#sudo yum install -y gcc make perl-CPAN perl-devel
-#sudo cpan -f IPC::Run
-sudo dnf install -y perl
+sudo yum clean metadata
+sudo yum makecache
 
 # Downloading and installing perl-IPC-Run manually
-curl -O http://rpmfind.net/linux/centos/8-stream/BaseOS/x86_64/os/Packages/perl-IPC-Run-0.99-1.el8.noarch.rpm
-sudo cpan IPC::Run
-# Installing PostgreSQL server and development package
-sudo dnf install -y postgresql14-server postgresql14-devel --nobest --skip-broken
+yum search perl-IPC-Run
+sudo yum install -y perl-IPC-Run
+sudo yum install -y postgresql14-server postgresql14-devel --nobest --skip-broken
 #starting the postgres
 sudo systemctl enable --now postgresql-14
+sudo systemctl restart postgresql-14
+#if [ -f /etc/yum.repos.d/pgdg-redhat-all.repo.old ]; then
+#    sudo mv /etc/yum.repos.d/pgdg-redhat-all.repo.old /etc/yum.repos.d/pgdg-redhat-all.repo
+#fi
+sudo yum update -y
 
 #exporting variables
 export POSTGRES_USER=${POSTGRES_USER}

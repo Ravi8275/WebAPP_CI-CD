@@ -51,6 +51,6 @@ build {
   sources = ["source.googlecompute.example"]
 
   provisioner "shell" {
-    script = "provision.sh"
+    script = "Packer/provision.sh"
   }
 }
