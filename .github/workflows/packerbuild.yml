@@ -60,7 +60,7 @@ jobs:
         run: packer init Packer
 
       - name: Build Packer image
-        run: packer build packer
+        run: packer build Packer
 
     env:
       GCP_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
