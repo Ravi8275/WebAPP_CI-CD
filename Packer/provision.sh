@@ -6,18 +6,30 @@ sudo yum update -y
 
 #installing the required
 sudo yum install -y wget gnupg python3 gcc 
-#sudo mv /etc/yum.repos.d/pgdg-redhat-all.repo /etc/yum.repos.d/pgdg-redhat-all.repo.old
 #providing the repository to download postgres
 sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+#sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
 #to download the gpg key which is used to signpostgres package
-curl -O https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG-14
-file RPM-GPG-KEY-PGDG-14
-sudo rpm --import RPM-GPG-KEY-PGDG-14
+curl -O https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG
+file RPM-GPG-KEY-PGDG
+sudo rpm --import RPM-GPG-KEY-PGDG
+#gpg --import RPM-GPG-KEY-PGDG
+
+sudo mv /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial.bad
 
 sudo yum -y module disable postgresql
+#sudo yum clean metadata
+#sudo yum makecache
 
+sudo yum clean all
 sudo yum clean metadata
-sudo yum makecache
+sudo dnf clean all
+
+# Running yum update to fetch new GPG keys
+sudo yum update -y
+
+# Restoring original GPG key filenames
+sudo mv /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial.bad /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
 
 # Downloading and installing perl-IPC-Run manually
 yum search perl-IPC-Run
@@ -26,9 +38,6 @@ sudo yum install -y postgresql14-server postgresql14-devel --nobest --skip-broke
 #starting the postgres
 sudo systemctl enable --now postgresql-14
 sudo systemctl restart postgresql-14
-#if [ -f /etc/yum.repos.d/pgdg-redhat-all.repo.old ]; then
-#    sudo mv /etc/yum.repos.d/pgdg-redhat-all.repo.old /etc/yum.repos.d/pgdg-redhat-all.repo
-#fi
 sudo yum update -y
 
 #exporting variables
@@ -57,3 +66,8 @@ python3 -m virtualenv venv
 source venv/bin/activate
 pip install -r "$(pwd)/requirements.txt"
 
+#Webapp system services
+sudo cp Packer/Webapp.services /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable Webapp.services
+sudo systemctl start Webapp.services

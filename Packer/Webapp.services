@@ -1,0 +1,13 @@
+[unit]
+Description=Web Application
+After=network.target
+
+[Service]
+user=ravi
+Group=ravi
+WorkingDirectory=/home/admin/WebAPP_CI-CD
+#ExecStart=
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
