@@ -69,7 +69,7 @@ jobs:
         run: packer build Packer
 
     env:
-      GCP_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+      GCP_CREDENTIALS: ${{ secrets.GCP_KEY }}
       GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       GCP_REGION: ${{ secrets.GCP_REGION }}
       PKR_VAR_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
