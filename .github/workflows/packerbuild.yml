@@ -60,6 +60,11 @@ jobs:
       - name: Initialize packer
         run: packer init Packer
 
+      - name: Set up GCP credentials
+        run: |
+          echo "$GCP_CREDENTIALS" > /tmp/gcp_key.json
+          export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp_key.json"
+          
       - name: Build Packer image
         run: packer build Packer
 
