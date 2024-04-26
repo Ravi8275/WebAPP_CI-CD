@@ -68,6 +68,9 @@ jobs:
           echo "$GCP_CREDENTIALS" > /tmp/gcp_key.json
           export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp_key.json"
 
+      - name: Debug GCP Key File
+        run: cat /tmp/gcp_key.json
+
       - name: Build Packer image
         run: packer build -var-file=/tmp/gcp_key.json Packer
 
