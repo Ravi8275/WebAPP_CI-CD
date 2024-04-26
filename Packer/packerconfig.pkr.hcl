@@ -39,7 +39,7 @@ source "googlecompute" "example" {
 
   metadata = {
     #google-compute-default-region = var.region
-    google-compute-default-zone   = var.zone
+    google-compute-default-zone = var.zone
     #ssh-keys = "centos:${var.public_ssh_key_path}"
   }
 
