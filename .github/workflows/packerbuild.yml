@@ -65,8 +65,8 @@ jobs:
           echo "$GCP_CREDENTIALS" > /tmp/gcp_key.json
           export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp_key.json"
           
-      - name: Build Packer image
-        run: packer build Packer
+     - name: Build Packer image
+        run: packer build -var-file=/tmp/gcp_key.json Packer
 
     env:
       GCP_CREDENTIALS: ${{ secrets.GCP_KEY }}
