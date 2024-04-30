@@ -66,7 +66,7 @@ jobs:
            credentials_json: '${{ secrets.GCP_KEY }}'
 
       - name: Build Packer image
-        run: packer build -var-file=/tmp/gcp_key.json Packer
+        run: packer build -var-file=/tmp/gcp_key.json Packer/Packer
 
     env:
       GCP_CREDENTIALS: ${{ secrets.GCP_KEY }}
