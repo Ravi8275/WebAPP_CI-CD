@@ -60,16 +60,10 @@ jobs:
       - name: Initialize packer
         run: packer init Packer
 
-      - name: Debug GCP Credentials
-        run: echo "GCP_CREDENTIALS:$GCP_CREDENTIALS"
-
-      - name: Set up GCP credentials
-        run: |
-          echo "$GCP_CREDENTIALS" > /tmp/gcp_key.json
-          export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp_key.json"
-
-      - name: Debug GCP Key File
-        run: cat /tmp/gcp_key.json
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v2
+        with: 
+           credentials_json: '${{ secrets.GCP_KEY }}'
 
       - name: Build Packer image
         run: packer build -var-file=/tmp/gcp_key.json Packer
