@@ -15,7 +15,16 @@ file RPM-GPG-KEY-PGDG
 sudo rpm --import RPM-GPG-KEY-PGDG
 #gpg --import RPM-GPG-KEY-PGDG
 
+
+# Removing all installed GPG keys
+sudo rpm -e --allmatches gpg-pubkey
+
+sudo yum update -y
+
 sudo mv /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial /etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial.bad
+
+
+
 
 sudo yum -y module disable postgresql
 #sudo yum clean metadata
