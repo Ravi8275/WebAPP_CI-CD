@@ -18,9 +18,9 @@ variable "image_name" {
   default = "webapp-custom-image"
 }
 
-#variable "public_ssh_key_path" {
-#  default = "raviirt"
-#}
+variable "public_ssh_key_path" {
+  default = "raviirt"
+}
 
 packer {
   required_plugins {
@@ -38,7 +38,6 @@ source "googlecompute" "example" {
   zone                = var.zone
 
   metadata = {
-    #google-compute-default-region = var.region
     google-compute-default-zone = var.zone
     #ssh-keys = "centos:${var.public_ssh_key_path}"
   }
